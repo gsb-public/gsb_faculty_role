@@ -1,0 +1,19 @@
+<?php
+
+/**
+ * Setting gsb_faculty_role to follow metatag, in the module peckin' order.
+ */
+function gsb_faculty_role_update_7000() {
+
+  // Make the weight of gsb_feature_file_types one higher than metatag.
+  $weight = db_select('system', 's')
+              ->fields('s', array('weight'))
+              ->condition('name', 'metatag', '=')
+              ->execute()
+              ->fetchField();
+
+  db_update('system')
+    ->fields(array('weight' => $weight+1))
+    ->condition('name', 'gsb_faculty_role', '=')
+    ->execute();
+}

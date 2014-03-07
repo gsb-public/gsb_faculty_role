@@ -1,0 +1,4 @@
+name = GSB Faculty Role
+description = Provides custom functionality related to the faculty role.
+package = GSB
+core = 7.x
