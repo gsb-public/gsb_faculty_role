@@ -9,6 +9,10 @@
  * Implements hook_form_FORM_ID_alter() for Faculty Content Type - faculty_node_form.
  */
 function gsb_faculty_role_form_faculty_node_form_alter(&$form, $form_state) {
+  
+  // @TODO: There is a bug when hiding the vertical tabs that makes it so the values are not submitted.
+  // This causes url aliases to not be created. Which is very bad.
+  return;
   // hide the vertical tabs at the bottom of the form
   $form['additional_settings']['#access'] = FALSE;
   // hide all buttons except the 'Publish' button
