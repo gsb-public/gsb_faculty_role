@@ -6,40 +6,34 @@
  */
 
 /**
- * Implements hook_form_FORM_ID_alter() for Faculty Content Type - faculty_node_form.
+ * Implements hook_form_BASE_FORM_ID_alter() node_form.
  */
-function gsb_faculty_role_form_faculty_node_form_alter(&$form, $form_state) {
-  
-  // @TODO: There is a bug when hiding the vertical tabs that makes it so the values are not submitted.
-  // This causes url aliases to not be created. Which is very bad.
-  return;
-  // hide the vertical tabs at the bottom of the form
-  $form['additional_settings']['#access'] = FALSE;
-  // hide all buttons except the 'Publish' button
-  foreach ($form['actions'] as $key => $value) {
-    if ($key != 'save_and_publish' && is_array($value) && isset($form['actions'][$key]['#access'])) {
-      $form['actions'][$key]['#access'] = FALSE;
-    }
-  }
-  // set a pre_render function
-  $form['#pre_render'][] = 'gsb_faculty_role_group_administration_prerender';
+function gsb_faculty_role_form_node_form_alter(&$form, $form_state) {
+  $form['#process'][] = 'gsb_faculty_role_node_form_process';
 }
 
 /**
- * #pre_render callback: Hide the administration group.
+ * #process callback: Hide elements on the node form.
  */
-function gsb_faculty_role_group_administration_prerender($element) {
-  // Load the currently logged in user.
-  global $user;
-  // Check if the user has the 'Faculty' role.
-  if (in_array('Faculty', $user->roles)) {
-    // hide the 'Administration' tab
-    if (isset($element['group_main']['group_administration'])) {
-      $element['group_main']['group_administration']['#access'] = FALSE;
+function gsb_faculty_role_node_form_process($form) {
+  if (!user_access('administer nodes')) {
+    // Hide the vertical tabs at the bottom of the form.
+    $form['additional_settings']['#access'] = FALSE;
+    // Hide all elements inside that vertical tab.
+    foreach (element_children($form) as $key) {
+      if (isset($form[$key]['#group']) && $form[$key]['#group'] == 'additional_settings') {
+        $form[$key]['#access'] = FALSE;
+      }
     }
   }
-  return $element;
-}  
 
-
-
+  if (in_array('Faculty', $GLOBALS['user']->roles)) {
+    // Hide all buttons except the 'Publish' button.
+    foreach (element_children($form['actions']) as $key) {
+      if ($key != 'save_and_publish') {
+        $form['actions'][$key]['#access'] = FALSE;
+      }
+    }
+  }
+  return $form;
+}
