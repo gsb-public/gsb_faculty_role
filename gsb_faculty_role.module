@@ -37,3 +37,13 @@ function gsb_faculty_role_node_form_process($form) {
   }
   return $form;
 }
+
+/**
+ * Implements hook_menu_local_tasks_alter().
+ */
+function gsb_faculty_role_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+  // If this is a case detail page being viewed by a Faculty user hide the tabs.
+  if (in_array('Faculty', $GLOBALS['user']->roles) && $router_item['path'] == 'node/%' && isset($router_item['map'][1]->type) && $router_item['map'][1]->type == 'case') {
+    $data['tabs'] = array();
+  }
+}
