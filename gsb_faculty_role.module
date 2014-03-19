@@ -28,6 +28,25 @@ function gsb_faculty_role_node_form_process($form) {
   }
 
   if (in_array('Faculty', $GLOBALS['user']->roles)) {
+    // Hide the alumni story group.
+    unset($form['#fieldgroups']['group_alumni_story'], $form['#groups']['group_alumni_story']);
+
+    // Hide the following fields if the user is in the Faculty role.
+    $field_map = array(
+      'field_academic_area_unlimited',
+      'field_alumni_story',
+      'field_business_insight_topic',
+      'field_centers_research_programs',
+      'field_company_organization',
+      'field_industry',
+      'field_region',
+    );
+    foreach ($field_map as $field_name) {
+      if (isset($form[$field_name])) {
+        $form[$field_name]['#access'] = FALSE;
+      }
+    }
+
     // Hide all buttons except the 'Publish' button.
     foreach (element_children($form['actions']) as $key) {
       if ($key != 'save_and_publish') {
