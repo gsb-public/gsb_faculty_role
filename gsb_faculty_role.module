@@ -28,19 +28,31 @@ function gsb_faculty_role_node_form_process($form) {
   }
 
   if (in_array('Faculty', $GLOBALS['user']->roles)) {
-    // Hide the alumni story group.
-    unset($form['#fieldgroups']['group_alumni_story'], $form['#groups']['group_alumni_story']);
-
     // Hide the following fields if the user is in the Faculty role.
     $field_map = array(
       'field_academic_area_unlimited',
-      'field_alumni_story',
       'field_business_insight_topic',
       'field_centers_research_programs',
       'field_company_organization',
       'field_industry',
       'field_region',
     );
+    // Hide all of the fields in these groups.
+    $groups = array(
+      'group_alumni_story',
+    );
+    foreach ($groups as $group) {
+      // Hide this group.
+      unset($form['#fieldgroups'][$group], $form['#groups'][$group]);
+      if (isset($form['#group_children'])) {
+        foreach ($form['#group_children'] as $field_name => $group_name) {
+          // If there are fields in this group, add them to the field map.
+          if ($group_name == $group && isset($form[$field_name])) {
+            $field_map[] = $field_name;
+          }
+        }
+      }
+    }
     foreach ($field_map as $field_name) {
       if (isset($form[$field_name])) {
         $form[$field_name]['#access'] = FALSE;
