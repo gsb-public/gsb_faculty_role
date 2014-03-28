@@ -6,10 +6,41 @@
  */
 
 /**
+ * Implements hook_module_implements_alter().
+ */
+function gsb_faculty_role_module_implements_alter(&$implementations, $hook) {
+  if ($hook == 'form_alter') {
+    // Allow gsb_faculty_role_form_faculty_node_form_alter to run last.
+    if (isset($implementations['gsb_faculty_role'])) {
+      $group = $implementations['gsb_faculty_role'];
+      unset($implementations['gsb_faculty_role']);
+      $implementations['gsb_faculty_role'] = $group;
+    }
+  }
+}
+
+/**
  * Implements hook_form_BASE_FORM_ID_alter() node_form.
  */
 function gsb_faculty_role_form_node_form_alter(&$form, $form_state) {
   $form['#process'][] = 'gsb_faculty_role_node_form_process';
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter() faculty_node_form.
+ */
+function gsb_faculty_role_form_faculty_node_form_alter(&$form, $form_state) {
+  if (in_array('Faculty', $GLOBALS['user']->roles)) {
+    // This must be attached at the button level because of workbench_moderation.
+    $form['actions']['submit']['#submit'][] = 'gsb_faculty_role_faculty_node_form_submit';
+  }
+}
+
+/**
+ * Redirects to the node edit.
+ */
+function gsb_faculty_role_faculty_node_form_submit(&$form, &$form_state) {
+  $form_state['redirect'] = 'node/' . $form_state['node']->nid . '/edit';
 }
 
 /**
