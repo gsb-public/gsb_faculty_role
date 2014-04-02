@@ -96,6 +96,13 @@ function gsb_faculty_role_node_form_process($form) {
         $form['actions'][$key]['#access'] = FALSE;
       }
     }
+
+    // Hide all buttons except the 'Publish' button.
+    foreach (element_children($form['field_submit']) as $key) {
+      if ($key != 'save_and_publish') {
+        $form['field_submit'][$key]['#access'] = FALSE;
+      }
+    }
   }
   return $form;
 }
