@@ -72,23 +72,7 @@ function gsb_faculty_role_node_form_process($form) {
     $groups = array(
       'group_alumni_story',
     );
-    foreach ($groups as $group) {
-      // Hide this group.
-      unset($form['#fieldgroups'][$group], $form['#groups'][$group]);
-      if (isset($form['#group_children'])) {
-        foreach ($form['#group_children'] as $field_name => $group_name) {
-          // If there are fields in this group, add them to the field map.
-          if ($group_name == $group && isset($form[$field_name])) {
-            $field_map[] = $field_name;
-          }
-        }
-      }
-    }
-    foreach ($field_map as $field_name) {
-      if (isset($form[$field_name])) {
-        $form[$field_name]['#access'] = FALSE;
-      }
-    }
+    gsb_feature_base_fields_hide_fieldgroups($form, $groups, $field_map);
 
     // Hide all buttons except the 'Publish' button.
     foreach (element_children($form['actions']) as $key) {
