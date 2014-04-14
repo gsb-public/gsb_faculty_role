@@ -67,6 +67,7 @@ function gsb_faculty_role_node_form_process($form) {
       'field_company_organization',
       'field_industry',
       'field_region',
+      'field_person_fac_single_ref',
     );
     // Hide all of the fields in these groups.
     $groups = array(
