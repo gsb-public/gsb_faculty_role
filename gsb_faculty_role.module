@@ -6,10 +6,44 @@
  */
 
 /**
+ * Implements hook_menu_alter().
+ *   - Replace tab titles for Faculty role.
+ */
+function gsb_faculty_role_menu_alter(&$items) {
+  // Replace Tabs title for faculty role.
+  $items['node/%node/view']['title callback'] = 'gsb_faculty_role_view_tab_title';
+  $items['node/%node/edit']['title callback'] = 'gsb_faculty_role_edit_tab_title';
+}
+
+/**
+ * Title callback for Faculty CT view tab, fallback to workbench callback.
+ */
+function gsb_faculty_role_view_tab_title($node) {
+  if (in_array('Faculty', $GLOBALS['user']->roles) && $node->type == 'faculty') {
+    return t('View profile');
+  }
+  else {
+    workbench_moderation_view_tab_title($node);
+  }
+}
+
+/**
+ * Title callback for Faculty CT edit tab, fallback to workbench callback.
+ */
+function gsb_faculty_role_edit_tab_title($node) {
+  if (in_array('Faculty', $GLOBALS['user']->roles) && $node->type == 'faculty') {
+    return t('Edit profile');
+  }
+  else {
+    workbench_moderation_edit_tab_title($node);
+  }
+}
+
+/**
  * Implements hook_module_implements_alter().
  */
 function gsb_faculty_role_module_implements_alter(&$implementations, $hook) {
-  if ($hook == 'form_alter') {
+  if (in_array($hook, array('form_alter', 'menu_alter'))) {
     // Allow gsb_faculty_role_form_faculty_node_form_alter to run last.
     if (isset($implementations['gsb_faculty_role'])) {
       $group = $implementations['gsb_faculty_role'];
