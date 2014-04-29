@@ -23,7 +23,7 @@ function gsb_faculty_role_view_tab_title($node) {
     return t('View profile');
   }
   else {
-    workbench_moderation_view_tab_title($node);
+    return workbench_moderation_view_tab_title($node);
   }
 }
 
@@ -35,7 +35,7 @@ function gsb_faculty_role_edit_tab_title($node) {
     return t('Edit profile');
   }
   else {
-    workbench_moderation_edit_tab_title($node);
+    return workbench_moderation_edit_tab_title($node);
   }
 }
 
