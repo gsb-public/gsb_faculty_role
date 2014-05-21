@@ -95,12 +95,9 @@ function gsb_faculty_role_node_form_process($form) {
   if (in_array('Faculty', $GLOBALS['user']->roles)) {
     // Hide the following fields if the user is in the Faculty role.
     $field_map = array(
-      'field_academic_area_unlimited',
-      'field_business_insight_topic',
       'field_centers_research_programs',
       'field_company_organization',
       'field_industry',
-      'field_region',
       'field_person_fac_single_ref',
     );
     // Hide all of the fields in these groups.
